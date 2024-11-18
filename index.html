@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Map Pulse</title>
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <h1>Map Pulse</h1>
 
@@ -13,13 +15,24 @@
   <div id="controls">
     <input type="text" id="locationSearch" placeholder="Search location">
     <button id="searchButton">Search</button>
-    <button id="clearMarkers">Clear Markers</button>
     <button id="savedButton">Saved</button>
-    <button id="directionsButton">Get Directions</button>
-    <button id="refreshButton">Refresh</button> <!-- New Refresh Button -->
+    <button id="refreshButton">Refresh</button>
+    <button id="currentLocationButton">Current Location</button>
+    <button id="showTrafficButton">Show Traffic</button>
+    <button id="hideTrafficButton">Hide Traffic</button>
+
+
   </div>
-  
-  
+
+  <div id="savedLocationsContainer">
+    <label for="savedLocations">Saved Locations:</label>
+    <select id="savedLocations">
+      <option value="">Select a location</option>
+    </select>
+  </div>
+
+
+
   <div id="directions">
     <input type="text" id="source" placeholder="Enter source location">
     <input type="text" id="destination" placeholder="Enter destination location">
@@ -34,6 +47,9 @@
   <script src="scripts.js"></script>
 
   <!-- Google Maps and Places API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzH3bc-LlqybPhBgfE89VP4dmyczYNoPo&libraries=places&callback=initMap" async defer></script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzH3bc-LlqybPhBgfE89VP4dmyczYNoPo&libraries=places&callback=initMap"
+    async defer></script>
 </body>
+
 </html>

@@ -3,6 +3,7 @@ let markers = [];
 let directionsService;
 let directionsRenderer;
 let autocomplete;
+let trafficLayer; 
 
 function initMap() {
   // Initialize the map
@@ -15,6 +16,17 @@ function initMap() {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
+
+    // Initialize TrafficLayer
+    trafficLayer = new google.maps.TrafficLayer();
+ // Event listeners for show/hide traffic buttons
+  document.getElementById("showTrafficButton").addEventListener("click", () => {
+  trafficLayer.setMap(map); // Add traffic layer to the map
+});
+
+document.getElementById("hideTrafficButton").addEventListener("click", () => {
+  trafficLayer.setMap(null); // Remove traffic layer from the map
+});
 
   // Initialize Autocomplete for the search input
   const input = document.getElementById("locationSearch");
@@ -32,6 +44,11 @@ function initMap() {
 
   // Event listener for refresh button
   document.getElementById("refreshButton").addEventListener("click", refreshMap);
+
+  document.getElementById("currentLocationButton").addEventListener("click", showCurrentLocation);
+
+
+  populateSavedLocationsDropdown();
 }
 
 function handlePlaceSelection() {
@@ -54,6 +71,31 @@ function handlePlaceSelection() {
     saveLocation(place.geometry.location);
   }
 }
+
+function showCurrentLocation() {
+  // Check if Geolocation API is available
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const currentLocation = { lat: latitude, lng: longitude };
+
+        // Add a marker for the current location
+        addMarker(currentLocation, "My Current Location");
+        map.setCenter(currentLocation);
+        map.setZoom(15);
+
+      },
+      (error) => {
+        console.error("Error fetching current location:", error);
+        alert("Unable to fetch current location. Please ensure location services are enabled.");
+      }
+    );
+  } else {
+    alert("Geolocation is not supported by your browser.");
+  }
+}
+
 
 function saveLocation(latLng) {
   const timestamp = new Date().toISOString();
@@ -91,6 +133,42 @@ function plotSavedLocations() {
     })
     .catch((err) => console.error("Error fetching locations:", err));
 }
+
+function populateSavedLocationsDropdown() {
+  fetch("http://localhost:5000/getLocations")
+    .then((response) => response.json())
+    .then((data) => {
+      const dropdown = document.getElementById("savedLocations");
+      dropdown.innerHTML = '<option value="">Select a location</option>'; // Reset dropdown options
+
+      if (data.length > 0) {
+        data.forEach((location) => {
+          const option = document.createElement("option");
+          option.value = `${location.lat},${location.lng}`;
+          option.textContent = `Saved on: ${location.timestamp}`;
+          dropdown.appendChild(option);
+        });
+      } else {
+        alert("No saved locations found.");
+      }
+    })
+    .catch((err) => console.error("Error fetching saved locations:", err));
+}
+
+document.getElementById("savedLocations").addEventListener("change", function () {
+  const selectedValue = this.value;
+
+  if (selectedValue) {
+    const [lat, lng] = selectedValue.split(",").map(Number);
+    const location = { lat, lng };
+
+    // Add marker and center the map
+    addMarker(location, "Saved Location");
+    map.setCenter(location);
+    map.setZoom(15);
+  }
+});
+
 
 function addMarker(location, title) {
   const marker = new google.maps.Marker({
