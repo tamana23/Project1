@@ -90,6 +90,9 @@ app.put('/updateLocation/:id', (req, res) => {
 });
 
 
+
+
+
 app.delete('/deleteLocation/:id', (req, res) => {
   const { id } = req.params;
 

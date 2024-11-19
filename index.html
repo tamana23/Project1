@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Map Pulse</title>
+  <title >Map Pulse</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -16,6 +16,7 @@
     <input type="text" id="locationSearch" placeholder="Search location">
     <button id="searchButton">Search</button>
     <button id="savedButton">Saved</button>
+    <button id="Favorites">Add to Favorites</button>
     <button id="refreshButton">Refresh</button>
     <button id="currentLocationButton">Current Location</button>
     <button id="showTrafficButton">Show Traffic</button>
@@ -27,7 +28,8 @@
   <div id="savedLocationsContainer">
     <label for="savedLocations">Saved Locations:</label>
     <select id="savedLocations">
-      <option value="">Select a location</option>
+      <option  id="option"
+      value="">Select a location</option>
     </select>
   </div>
 
@@ -39,6 +41,8 @@
     <button id="calculateRoute">Calculate Route</button>
     <p id="travelInfo"></p>
   </div>
+  
+  
 
   <!-- Google Map -->
   <div id="map"></div>

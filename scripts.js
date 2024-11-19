@@ -33,6 +33,21 @@ document.getElementById("hideTrafficButton").addEventListener("click", () => {
   autocomplete = new google.maps.places.Autocomplete(input);
   autocomplete.bindTo("bounds", map);
 
+   // Add event listener for map clicks
+    google.maps.event.addListener(map, "click", (event) => {
+    const clickedLocation = event.latLng;
+
+    // Show confirmation alert
+    const saveConfirmation = confirm(
+      `Do you want to save this location?\nLatitude: ${clickedLocation.lat()}, Longitude: ${clickedLocation.lng()}`
+    );
+
+    if (saveConfirmation) {
+      // Save the clicked location to the database
+      saveLocation(clickedLocation);
+    }
+  });
+
   // Add event listener for the autocomplete search
   autocomplete.addListener("place_changed", handlePlaceSelection);
 
@@ -110,6 +125,8 @@ function saveLocation(latLng) {
     .then((data) => {
       if (data.success) {
         alert("Location saved successfully!");
+        // Optionally add a marker for the saved location
+        addMarker(latLng, "Saved Location");
       } else {
         alert("Error saving location!");
       }
@@ -118,6 +135,7 @@ function saveLocation(latLng) {
       console.error("Error saving location:", err);
     });
 }
+
 
 function plotSavedLocations() {
   fetch("http://localhost:5000/getLocations")
